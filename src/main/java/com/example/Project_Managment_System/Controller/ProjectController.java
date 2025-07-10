@@ -3,6 +3,7 @@ package com.example.Project_Managment_System.Controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,6 +12,7 @@ import com.example.Project_Managment_System.Entity.Project;
 import com.example.Project_Managment_System.Service.ProjectService;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 public class ProjectController {
 
     @Autowired
