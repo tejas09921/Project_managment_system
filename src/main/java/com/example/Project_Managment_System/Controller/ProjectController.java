@@ -12,7 +12,7 @@ import com.example.Project_Managment_System.Entity.Project;
 import com.example.Project_Managment_System.Service.ProjectService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {"http://localhost:3000", "https://localhost:5173"})
 public class ProjectController {
 
     @Autowired
