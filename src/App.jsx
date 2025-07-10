@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { FolderOpen, Users, Database, Monitor, TrendingUp } from 'lucide-react';
+import { FolderOpen, Users, Database, Monitor, TrendingUp, Sparkles, Zap } from 'lucide-react';
 import { projectService } from './services/api';
 import ProjectCard from './components/ProjectCard';
 import FilterBar from './components/FilterBar';
@@ -97,15 +97,35 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen animated-bg">
+      {/* Floating particles background */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-10 left-10 w-4 h-4 bg-white/20 rounded-full float-animation"></div>
+        <div className="absolute top-32 right-20 w-6 h-6 bg-purple-300/30 rounded-full float-animation" style={{animationDelay: '1s'}}></div>
+        <div className="absolute bottom-20 left-1/4 w-3 h-3 bg-blue-300/40 rounded-full float-animation" style={{animationDelay: '2s'}}></div>
+        <div className="absolute top-1/2 right-10 w-5 h-5 bg-pink-300/30 rounded-full float-animation" style={{animationDelay: '0.5s'}}></div>
+      </div>
+
       {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center">
-            <FolderOpen className="w-8 h-8 text-blue-600 mr-3" />
-            <h1 className="text-3xl font-bold text-gray-900">Project Management System</h1>
+      <header className="glass border-b border-white/20 backdrop-blur-xl">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="flex items-center justify-center">
+            <div className="flex items-center space-x-4">
+              <div className="relative">
+                <FolderOpen className="w-12 h-12 text-white drop-shadow-lg pulse-glow" />
+                <Sparkles className="w-6 h-6 text-yellow-300 absolute -top-2 -right-2 animate-pulse" />
+              </div>
+              <div className="text-center">
+                <h1 className="text-4xl md:text-5xl font-bold text-white neon-glow mb-2">
+                  Project Management System
+                </h1>
+                <p className="text-xl text-white/80 font-medium flex items-center justify-center">
+                  <Zap className="w-5 h-5 mr-2 text-yellow-300" />
+                  Manage and track your projects with style
+                </p>
+              </div>
+            </div>
           </div>
-          <p className="mt-2 text-gray-600">Manage and track your projects efficiently</p>
         </div>
       </header>
 
@@ -117,24 +137,28 @@ function App() {
             value={stats.totalProjects}
             icon={FolderOpen}
             color="blue"
+            gradient="bg-gradient-primary"
           />
           <StatsCard
             title="Project Leaders"
             value={stats.uniqueLeaders}
             icon={Users}
             color="green"
+            gradient="bg-gradient-success"
           />
           <StatsCard
             title="Databases Used"
             value={stats.uniqueDatabases}
             icon={Database}
             color="purple"
+            gradient="bg-gradient-secondary"
           />
           <StatsCard
             title="Large Teams (>25)"
             value={stats.largeTeams}
             icon={TrendingUp}
             color="orange"
+            gradient="bg-gradient-warning"
           />
         </div>
 
@@ -156,30 +180,36 @@ function App() {
         ) : error ? (
           <ErrorMessage message={error} onRetry={loadAllProjects} />
         ) : filteredProjects.length === 0 ? (
-          <div className="text-center py-12">
-            <FolderOpen className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-gray-600 mb-2">No Projects Found</h3>
-            <p className="text-gray-500">
-              {searchTerm || selectedFilter !== 'all' 
-                ? 'Try adjusting your search or filter criteria.' 
-                : 'No projects available in the system.'}
-            </p>
+          <div className="text-center py-16">
+            <div className="glass rounded-3xl p-12 max-w-md mx-auto">
+              <FolderOpen className="w-20 h-20 text-white/60 mx-auto mb-6 float-animation" />
+              <h3 className="text-2xl font-bold text-white mb-4">No Projects Found</h3>
+              <p className="text-white/70 text-lg">
+                {searchTerm || selectedFilter !== 'all' 
+                  ? 'Try adjusting your search or filter criteria.' 
+                  : 'No projects available in the system.'}
+              </p>
+            </div>
           </div>
         ) : (
           <>
             {/* Results Header */}
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-semibold text-gray-800">
-                {searchTerm ? `Search Results (${filteredProjects.length})` : 
-                 selectedFilter !== 'all' ? `Filtered Results (${filteredProjects.length})` :
-                 `All Projects (${filteredProjects.length})`}
-              </h2>
+            <div className="flex justify-between items-center mb-8">
+              <div className="glass rounded-2xl px-6 py-4">
+                <h2 className="text-2xl font-bold text-white">
+                  {searchTerm ? `🔍 Search Results (${filteredProjects.length})` : 
+                   selectedFilter !== 'all' ? `🎯 Filtered Results (${filteredProjects.length})` :
+                   `📊 All Projects (${filteredProjects.length})`}
+                </h2>
+              </div>
             </div>
 
             {/* Projects Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredProjects.map((project) => (
-                <ProjectCard key={project.projectid} project={project} />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {filteredProjects.map((project, index) => (
+                <div key={project.projectid} style={{animationDelay: `${index * 0.1}s`}} className="animate-fade-in-up">
+                  <ProjectCard project={project} />
+                </div>
               ))}
             </div>
           </>
@@ -187,11 +217,18 @@ function App() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-white border-t mt-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <p className="text-center text-gray-500">
-            Project Management System - Built with React & Spring Boot
-          </p>
+      <footer className="glass border-t border-white/20 mt-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="text-center">
+            <p className="text-white/80 text-lg font-medium">
+              ✨ Project Management System - Built with React & Spring Boot ✨
+            </p>
+            <div className="flex justify-center items-center mt-4 space-x-4">
+              <div className="w-2 h-2 bg-pink-400 rounded-full animate-pulse"></div>
+              <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse" style={{animationDelay: '0.5s'}}></div>
+              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" style={{animationDelay: '1s'}}></div>
+            </div>
+          </div>
         </div>
       </footer>
     </div>
